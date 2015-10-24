@@ -1,0 +1,38 @@
+from pyknon.genmidi import Midi     #using pyknon library. Our program transforms a beautiful melody to a scary one. muahaha.
+from pyknon.music import NoteSeq, Note
+from random import choice
+import collections
+
+notes = NoteSeq("A B C D E F G Am F Am F C G F Dm Am F C G F Dm Am F7M Am F7M C G DM AM C Am F Am C G F Dm F#m D7M Bm D A E ")
+midi = Midi(1, tempo=90)
+midi.seq_notes(notes, track=0)
+
+def choice_if_list(item): ##https://github.com/eric-brechemier/music-for-geeks-exercises/blob/master/exercise08.py
+    if isinstance(item, collections.Iterable):
+        return choice(item)
+    else:
+        return item
+def gen_midi(filename, note_list):    #generating orginal song, setting default ocatves and tempos through this function
+    midi = Midi(tempo=90)
+    midi.seq_notes(note_list)
+    midi.write(filename)
+def random_notes(pitch_list, octave, duration,number_of_notes, volume=120):
+  result = NoteSeq()
+  for x in range(0, number_of_notes):
+    pitch = choice(pitch_list)
+    octave = choice_if_list(octave)
+    dur = choice_if_list(duration)
+    vol = choice_if_list(volume)
+    result.append(Note(pitch, octave, dur, vol))
+  return result
+
+
+midi.write("Song.mid") #wrote default song/ Will be the file you drag to listen to default song in garage band
+
+def random1():  #implementing horror function where we changed duration and ranges to produce a horror sound
+  chromatic = range(0, 12)
+  durations = [1, 1/2, 1/4, 1/8, 1/16 , 1/32, 1/64]
+  notes1 = random_notes(chromatic,range(0, 9),durations,100,range(0, 128, 20))
+  gen_midi("Horror.mid", notes1) #this will be the file you choose to play the horror song derived from the notes used in teh original 
+
+random1()
